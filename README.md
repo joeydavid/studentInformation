@@ -1,2 +1,0 @@
-# studentInformation
-Student Information System
