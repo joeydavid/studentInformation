@@ -1,5 +1,15 @@
 <?php
 
+if(!isset($_SESSION)){
+    session_start();
+}
+
+if(isset($_SESSION['UserLogin'])){
+    echo "Welcome ".$_SESSION['UserLogin'];
+}else{
+    echo "Welcome Guest";
+}
+
 include_once("connections/connection.php");
 
 $con = connection();
@@ -16,29 +26,52 @@ $row = $students->fetch_assoc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
-    <link rel="stylesheet" href="css/style.css">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/index.css" type="text/css">
 </head>
 <body>
+<div class="container mt-5">
     <h1>Student Management System</h1>
     <br>
     <br>
-    <a href="add.php">Add New</a>
-    <table>
-        <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>        
-        </tr>
-        </thead>
-        <tbody>
-        <?php do{ ?>
-        <tr>
-            <td><?php echo $row['first_name']; ?></td>
-            <td><?php echo $row['last_name']; ?></td>
-        </tr>
-        <?php }while($row = $students->fetch_assoc()) ?>
-        </tbody>
-    </table>
+    
+    <form action="result.php" method="get" class="mb-3">
+        <input type="text" name="search" id="search" placeholder="Search Name">
+        <button class="btn btn-primary btn-sm" type="submit">Go</button>
+    </form>
+
+    <?php if(isset($_SESSION['UserLogin'])){?>
+        <a class="btn btn-info btn-sm" href="logout.php">Logout</a>
+    <?php } else { ?>
+        <a class="btn btn-primary btn-sm" href="login.php">Login</a>
+    <?php } ?>
+
+        <a class="btn btn-primary btn-sm" href="add.php">Add New</a>
+
+    <div class="row justify-content-center">
+        <table class="table table-hover table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>FIRST NAME</th>
+                    <th>LAST NAME</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php do{ ?>
+                <tr>
+                    <td><a href="details.php?ID=<?php echo $row['id']; ?>">View</a></td>
+                    <td><?php echo $row['first_name']; ?></td>
+                    <td><?php echo $row['last_name']; ?></td>
+                </tr>
+                <?php }while($row = $students->fetch_assoc()) ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 </body>
 </html>
